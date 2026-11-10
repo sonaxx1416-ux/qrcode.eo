@@ -1,0 +1,27 @@
+import qrcode
+
+# أبسط استخدام
+var q = qrcode.QR("https://eolang.com")
+q.save "qr.png"
+q.show
+
+# نفس الكود بصيغ ثانية
+q.save "qr.svg"
+q.save "qr.txt"
+
+# خيارات
+var w = qrcode.QR("WIFI:T:WPA;S:MyHome;P:12345678;;")
+w.level = "H"
+w.box = 16
+w.border = 2
+w.fill = "#d94a5c"
+w.back = "#fff8f0"
+if w.save("wifi.png") {
+    print h"wifi.png: version ${w.used_version}, mask ${w.used_mask}, ${w.size}x${w.size}"
+}
+
+# لو النص طويل زيادة
+var big = qrcode.QR("x" * 400)
+if not big.save("big.png") {
+    print "ما زبط: " + big.error
+}
