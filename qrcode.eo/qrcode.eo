@@ -113,13 +113,6 @@ func QR.show {
     print self.terminal()
 }
 
-func QR.retu {
-    if not self.make() {
-        return
-    }
-    return self.terminal()
-}
-
 # الكود كنص بـ █ (مربعين لكل وحدة)
 func QR.text {
     if not self.make() {
