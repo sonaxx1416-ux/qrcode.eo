@@ -113,6 +113,7 @@ func QR.show {
     print self.terminal()
 }
 
+# نفس show بس يرجعه كنص بدل ما يطبعه: var t = q.retu
 func QR.retu {
     if not self.make() {
         return ""
@@ -154,12 +155,18 @@ func QR.dark x @int, y @int {
 # ═════════════════════════════════════════════
 
 func QR.terminal {
+    if not self.make() {
+        return ""
+    }
+    var f = rgb(self.fill)
+    var k = rgb(self.back)
+    var color = h"\u001b[38;2;${f[0]};${f[1]};${f[2]};48;2;${k[0]};${k[1]};${k[2]}m"
     var b = self.border
     var n = self.size + b * 2
     var lines = []
     var y = 0
     while y < n {
-        var row = "\u001b[30;107m"
+        var row = color
         for x in range(n) {
             var top = self.dark(x - b, y - b)
             var bottom = self.dark(x - b, y + 1 - b)
@@ -273,9 +280,16 @@ func be32 n @int {
     return [bit_and(shr(n, 24), 255), bit_and(shr(n, 16), 255), bit_and(shr(n, 8), 255), bit_and(n, 255)]
 }
 
-# "#ff8800" → [255, 136, 0]
+# أسماء ألوان: q.fill = "white"
+const COLORS = {"black": "#000000", "white": "#ffffff", "red": "#ff0000", "green": "#008000", "blue": "#0000ff", "yellow": "#ffff00", "orange": "#ffa500", "purple": "#800080", "pink": "#ffc0cb", "gray": "#808080", "grey": "#808080", "cyan": "#00ffff", "magenta": "#ff00ff", "brown": "#8b4513", "navy": "#000080", "gold": "#ffd700"}
+
+# "#ff8800" أو "#f80" أو "orange" → [255, 136, 0]
 func rgb hex @string {
-    var h = replace(trim(hex), "#", "")
+    var name = lower(trim(hex))
+    if has(COLORS, name) {
+        return rgb(COLORS[name])
+    }
+    var h = replace(name, "#", "")
     if len(h) == 3 {
         h = slice(h, 0, 1) * 2 + slice(h, 1, 2) * 2 + slice(h, 2, 3) * 2
     }
